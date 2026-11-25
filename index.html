@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0e0b1a" />
+  <title>Connect Dot</title>
+  <!-- YouTube Playables SDK v1 MUST be loaded before any game code -->
+  <script src="https://www.youtube.com/game_api/v1"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <div class="bg-glow bg-glow-1" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-2" aria-hidden="true"></div>
+
+    <!-- SCREEN 1: HOME (MAIN) -->
+    <section id="screen-home" class="screen active" aria-label="Home">
+      <header class="currency-bar">
+        <div class="currency-group">
+          <div class="curr-pill">
+            <span class="curr-coin" aria-hidden="true">$</span>
+            <span id="home-coins">60</span>
+          </div>
+          <div class="curr-pill">
+            <span class="curr-gem" aria-hidden="true">&#9670;</span>
+            <span id="home-gems">10</span>
+          </div>
+        </div>
+        <div class="currency-actions">
+          <button id="btn-sound-home" class="icon-btn" aria-label="Toggle Sound">
+            <svg class="icon-sound-on" viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+            </svg>
+            <svg class="icon-sound-off hidden" viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <line x1="23" y1="9" x2="17" y2="15"></line>
+              <line x1="17" y1="9" x2="23" y2="15"></line>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Level Chest Progress -->
+      <div class="chest-card" id="chest-card">
+        <div class="chest-header">
+          <span id="label-level-chest" class="chest-title">Level Chest</span>
+          <span id="chest-ready-hint" class="chest-ready-badge hidden">TAP TO OPEN!</span>
+        </div>
+        <div class="chest-bar-row">
+          <div class="chest-progress-bg">
+            <div id="chest-progress-fill" class="chest-progress-fill" style="width: 0%"></div>
+            <span id="chest-progress-text" class="chest-progress-text">0/5</span>
+          </div>
+          <button id="btn-open-chest" class="chest-icon-btn" aria-label="Level Chest" title="Level Chest">
+            <svg viewBox="0 0 48 42" width="44" height="38" fill="none">
+              <rect x="4" y="14" width="40" height="24" rx="5" fill="#B7410E" stroke="#FFD54F" stroke-width="2.5"/>
+              <path d="M4 16C4 8 10 4 24 4C38 4 44 8 44 16H4Z" fill="#E65100" stroke="#FFD54F" stroke-width="2.5"/>
+              <rect x="11" y="5" width="5" height="32" fill="#FFD54F"/>
+              <rect x="32" y="5" width="5" height="32" fill="#FFD54F"/>
+              <rect x="19" y="15" width="10" height="11" rx="3" fill="#FFE066" stroke="#8D3000" stroke-width="2"/>
+              <circle cx="24" cy="20" r="2" fill="#5D1F00"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Daily Puzzle Card -->
+      <div class="daily-card">
+        <div class="daily-calendar-icon" aria-hidden="true">
+          <svg viewBox="0 0 56 52" width="54" height="50" fill="none">
+            <rect x="4" y="8" width="48" height="40" rx="9" fill="#F4F4FA"/>
+            <path d="M4 17C4 12 8 8 13 8H43C48 8 52 12 52 17V19H4V17Z" fill="#FF5252"/>
+            <rect x="14" y="3" width="5" height="10" rx="2.5" fill="#CFCBE2"/>
+            <rect x="37" y="3" width="5" height="10" rx="2.5" fill="#CFCBE2"/>
+            <circle cx="28" cy="33" r="10" fill="#80DEEA"/>
+            <circle cx="28" cy="33" r="5" fill="#FFE042"/>
+            <path d="M28 33L36 25" stroke="#FF5252" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div id="label-daily-puzzle" class="daily-title">Daily Puzzle</div>
+        <div id="daily-date-text" class="daily-date">25 November</div>
+        <button id="btn-daily-play" class="yellow-pill-btn">Play</button>
+      </div>
+
+      <!-- Main CTAs -->
+      <div class="home-cta-stack">
+        <button id="btn-quick-play" class="big-cta-btn cta-yellow">
+          <span id="quick-play-label">Level 1</span>
+          <span class="play-tri" aria-hidden="true">&#9654;</span>
+        </button>
+        <button id="btn-free-play" class="big-cta-btn cta-cyan">
+          <span id="label-free-play">Free Play</span>
+        </button>
+      </div>
+
+      <!-- Bottom Nav Bar -->
+      <nav class="bottom-nav" aria-label="Main Navigation">
+        <button class="nav-item active" data-tab="home">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>
+          </svg>
+          <span id="nav-main">Main</span>
+        </button>
+        <button class="nav-item" data-tab="daily">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="3"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <polyline points="9 14 11 16 15 12"/>
+          </svg>
+          <span id="nav-daily">Daily</span>
+        </button>
+        <button class="nav-item" data-tab="shop">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
+          <span id="nav-shop">Shop</span>
+        </button>
+        <button class="nav-item" data-tab="goals">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="9" r="6"/>
+            <path d="M8.5 14.5L7 22l5-2.5L17 22l-1.5-7.5"/>
+          </svg>
+          <span id="nav-goals">Goals</span>
+          <span id="goals-badge" class="nav-dot hidden"></span>
+        </button>
+      </nav>
+    </section>
+
+    <!-- SCREEN 2: FREE PLAY PACKS -->
+    <section id="screen-packs" class="screen" aria-label="Free Play Packs">
+      <header class="top-bar">
+        <button id="btn-packs-back" class="icon-btn" aria-label="Back">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </button>
+        <div class="level-pill-title" id="packs-heading">FREE PLAY</div>
+        <div class="spacer-42"></div>
+      </header>
+      <div id="packs-grid" class="packs-grid"></div>
+    </section>
+
+    <!-- SCREEN 3: LEVEL SELECT -->
+    <section id="screen-levels" class="screen" aria-label="Select Level">
+      <header class="top-bar">
+        <button id="btn-levels-back" class="icon-btn" aria-label="Back">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </button>
+        <div class="top-bar-center">
+          <div id="levels-pack-title" class="level-pill-title">5×5 CLASSIC</div>
+          <span id="levels-pack-progress" class="top-sub">0 / 20</span>
+        </div>
+        <button id="btn-random-level" class="pill-btn accent-btn">
+          <span id="random-btn-label">Random</span>
+        </button>
+      </header>
+      <div id="levels-grid" class="levels-grid"></div>
+    </section>
+
+    <!-- SCREEN 4: SHOP (DOTS & BACKGROUNDS) -->
+    <section id="screen-shop" class="screen" aria-label="Shop">
+      <header class="currency-bar">
+        <button id="btn-shop-back" class="icon-btn" aria-label="Back">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </button>
+        <div class="currency-group">
+          <div class="curr-pill">
+            <span class="curr-coin">$</span>
+            <span id="shop-coins">60</span>
+          </div>
+          <div class="curr-pill">
+            <span class="curr-gem">&#9670;</span>
+            <span id="shop-gems">10</span>
+          </div>
+          <div class="curr-pill">
+            <span class="curr-hint">&#9728;</span>
+            <span id="shop-hints">4</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="shop-title-wrap">
+        <div id="shop-heading" class="level-pill-title">Shop</div>
+      </div>
+
+      <!-- Hint Pack Exchange (Coins -> Hints, no external ads!) -->
+      <div class="shop-hint-banner">
+        <div class="shop-hint-info">
+          <span class="hint-bulb-mini">&#128161;</span>
+          <div>
+            <div id="label-buy-hints" class="shop-hint-title">+3 Hints Pack</div>
+            <div id="label-buy-hints-sub" class="shop-hint-sub">Get unstuck anytime</div>
+          </div>
+        </div>
+        <button id="btn-buy-hints" class="shop-buy-btn small-buy-btn">
+          <span class="curr-coin mini-c">$</span> 50
+        </button>
+      </div>
+
+      <!-- Segmented Switch: Dots / Backgrounds -->
+      <div class="shop-tabs">
+        <button id="tab-dots" class="shop-tab active">Dots</button>
+        <button id="tab-bgs" class="shop-tab">Backgrounds</button>
+      </div>
+
+      <div id="shop-grid" class="shop-grid"></div>
+    </section>
+
+    <!-- SCREEN 5: GOALS / AWARDS -->
+    <section id="screen-goals" class="screen" aria-label="Goals">
+      <header class="top-bar">
+        <button id="btn-goals-back" class="icon-btn" aria-label="Back">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </button>
+        <div id="goals-heading" class="level-pill-title">GOALS</div>
+        <div class="spacer-42"></div>
+      </header>
+      <div id="goals-list" class="goals-list"></div>
+    </section>
+
+    <!-- SCREEN 6: GAMEPLAY -->
+    <section id="screen-play" class="screen" aria-label="Gameplay">
+      <header class="top-bar play-top-bar">
+        <button id="btn-play-back" class="icon-btn" aria-label="Back">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </button>
+        <div id="play-level-title" class="level-pill-title">LEVEL 1</div>
+        <button id="btn-sound-play" class="icon-btn" aria-label="Toggle Sound">
+          <svg class="icon-sound-on" viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+          </svg>
+          <svg class="icon-sound-off hidden" viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
+        </button>
+      </header>
+
+      <!-- Sub-header: Coins + Grid size + live metrics -->
+      <div class="play-sub-bar">
+        <div class="curr-pill">
+          <span class="curr-coin">$</span>
+          <span id="play-coins">60</span>
+        </div>
+        <div class="grid-size-indicator">
+          <svg viewBox="0 0 18 18" width="16" height="16" fill="#6b5c8e">
+            <rect x="1" y="1" width="6.5" height="6.5" rx="1.5"/>
+            <rect x="10.5" y="1" width="6.5" height="6.5" rx="1.5"/>
+            <rect x="1" y="10.5" width="6.5" height="6.5" rx="1.5"/>
+            <rect x="10.5" y="10.5" width="6.5" height="6.5" rx="1.5"/>
+          </svg>
+          <span id="play-grid-badge">5×5</span>
+        </div>
+        <div class="play-mini-metrics">
+          <span id="metric-flows">0/5</span>
+          <span class="dot-sep">•</span>
+          <span id="metric-pipe">0%</span>
+        </div>
+      </div>
+
+      <!-- Board Canvas -->
+      <main class="board-stage">
+        <div id="board-wrapper" class="board-wrapper">
+          <canvas id="game-canvas"></canvas>
+          <div id="tutorial-toast" class="tutorial-toast hidden"></div>
+        </div>
+      </main>
+
+      <!-- Bottom 3-Button Action Bar (Matching Reference: RESTART - HINT - UNDO) -->
+      <footer class="play-actions-bar">
+        <button id="btn-reset" class="round-action-btn" aria-label="Restart">
+          <span class="round-circle">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="23 4 23 10 17 10"></polyline>
+              <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+            </svg>
+          </span>
+          <span id="label-reset" class="action-label">RESTART</span>
+        </button>
+
+        <button id="btn-hint" class="round-action-btn hint-action-btn" aria-label="Hint">
+          <span class="round-circle hint-circle">
+            <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#FFA726" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 18h6"></path>
+              <path d="M10 22h4"></path>
+              <path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"></path>
+            </svg>
+            <span id="hint-count-badge" class="hint-badge">4</span>
+          </span>
+          <span id="label-hint" class="action-label">HINT</span>
+        </button>
+
+        <button id="btn-undo" class="round-action-btn" aria-label="Undo">
+          <span class="round-circle">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 7v6h6"></path>
+              <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"></path>
+            </svg>
+          </span>
+          <span id="label-undo" class="action-label">UNDO</span>
+        </button>
+      </footer>
+    </section>
+
+    <!-- MODAL: LEVEL COMPLETE -->
+    <div id="modal-win" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+      <div class="modal-card">
+        <div id="win-stars" class="win-stars" aria-hidden="true">
+          <span class="win-star">&#9733;</span>
+          <span class="win-star">&#9733;</span>
+          <span class="win-star">&#9733;</span>
+        </div>
+        <h2 id="win-title" class="win-title">PERFECT!</h2>
+        <p id="win-desc" class="win-desc">Completed in 5 moves</p>
+        <div id="win-rewards" class="win-rewards">
+          <span class="reward-chip"><span class="curr-coin mini-c">$</span> +15</span>
+        </div>
+        <div class="modal-actions">
+          <button id="btn-win-replay" class="secondary-btn">Replay</button>
+          <button id="btn-win-next" class="yellow-pill-btn full-btn">Next Level</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: CHEST REWARD -->
+    <div id="modal-chest" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+      <div class="modal-card">
+        <div class="chest-modal-emoji">&#127873;</div>
+        <h2 id="chest-modal-title" class="win-title">LEVEL CHEST!</h2>
+        <p id="chest-modal-desc" class="win-desc">Awesome progress! Here is your reward:</p>
+        <div id="chest-rewards-list" class="win-rewards">
+          <span class="reward-chip"><span class="curr-coin mini-c">$</span> +50</span>
+          <span class="reward-chip"><span class="curr-gem mini-g">&#9670;</span> +5</span>
+          <span class="reward-chip">&#128161; +1</span>
+        </div>
+        <button id="btn-chest-claim" class="yellow-pill-btn full-btn">Claim</button>
+      </div>
+    </div>
+
+    <!-- MODAL: PAUSED -->
+    <div id="modal-pause" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+      <div class="modal-card compact-modal">
+        <h2 id="pause-title" class="win-title">PAUSED</h2>
+        <button id="btn-resume" class="yellow-pill-btn full-btn">Resume</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/sdk.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/shop.js"></script>
+  <script src="js/generator.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
